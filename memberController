@@ -1,0 +1,29 @@
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+public class MemberController {
+
+    private final MemberRepository memberRepository;
+
+    @Autowired
+    public MemberController(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
+    @PostMapping("/register")
+    public void register(@RequestBody Member member) {
+        memberRepository.save(member);
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody Member member) {
+        Member existingMember = memberRepository.findByUsername(member.getUsername());
+
+        if (existingMember != null && existingMember.getPassword().equals(member.getPassword())) {
+            return "Login successful";
+        } else {
+            return "Login failed";
+        }
+    }
+}
