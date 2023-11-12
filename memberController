@@ -1,0 +1,36 @@
+@Controller
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String processLogin(@RequestParam("username") String username, @RequestParam("password") String password) {
+        if (userService.authenticate(username, password)) {
+            return "redirect:/home";
+        } else {
+            return "login";
+        }
+    }
+
+    @GetMapping("/signup")
+    public String showSignUpPage() {
+        return "signup";
+    }
+
+    @PostMapping("/signup")
+    public String processSignUp(@RequestParam("username") String username, @RequestParam("password") String password) {
+        userService.createUser(username, password);
+        return "redirect:/login";
+    }
+
+    @GetMapping("/home")
+    public String showHomePage() {
+        return "home";
+    }
+}
